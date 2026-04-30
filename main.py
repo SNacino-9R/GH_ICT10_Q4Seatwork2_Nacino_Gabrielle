@@ -1,39 +1,41 @@
-from pyscript import document
+from pyscript import display, document, window
 
-def calculate_gwa(event):
-    fname = document.getElementById("fname").value
-    lname = document.getElementById("lname").value
+class Student:
+    def __init__(self, name, section, subject):
+        self.full_name = name
+        self.class_group = section
+        self.pref_subject = subject
 
-    
-    science = float(document.getElementById("science").value or 0)
-    math = float(document.getElementById("math").value or 0)
-    english = float(document.getElementById("english").value or 0)
-    filipino = float(document.getElementById("filipino").value or 0)
-    ict = float(document.getElementById("ict").value or 0)
-    pe = float(document.getElementById("pe").value or 0)
+    def get_info(self):
+      return f"• <strong>{self.full_name}</strong> ({self.class_group}) — Favorite: {self.pref_subject}<br>"
 
-    grades = [science, math, english, filipino, ict, pe]
-    units = [3, 3, 3, 3, 3, 2]
+student_data = [
+    Student("Charlize Galang", "10-Ruby", "SS"),
+    Student("Amanda Gonzales", "10-Ruby", "ICT"),
+    Student("Kaitlyn Nardo", "10-Ruby", "English"),
+    Student("Jade Cabatingan", "10-Ruby", "Math"),
+    Student("Erin Rebadulla", "10-Ruby", "Science")
+]
 
-    
-    total = 0
-    total_units = 0
-    for grade, unit in zip(grades, units):
-        total += grade * unit
-        total_units += unit
+def render_all(event):
+    output_div = document.getElementById("results-box")
+    output_div.innerHTML = ""
 
-    gwa = total / total_units
+    for person in student_data:
+        output_div.innerHTML += person.get_info() + "<br>"
 
-   
-    if gwa > 74:
-        status = "PASSED"
-    else:
-        status = "FAILED"
+def register_student(event):
+    name_in = document.getElementById("inp_name").value
+    sec_in = document.getElementById("inp_sec").value
+    sub_in = document.getElementById("inp_fav").value
 
- 
-    result_div = document.getElementById("result")
-    result_div.innerHTML = f"""
-        Student: {fname} {lname}<br>
-        <b>GWA:</b> {gwa:.2f}<br>
-        <b>Status:</b> {status}
-    """
+    if name_in and sec_in:
+        new_entry = Student(name_in, sec_in, sub_in)
+        student_data.append(new_entry)
+        document.getElementById("results-box").innerHTML = "<em>New student added successfully!</em>"
+        document.getElementById("inp_name").value = ""
+        document.getElementById("inp_sec").value = ""
+        document.getElementById("inp_fav").value = ""
+
+window.register_student = register_student
+window.render_all = render_all
